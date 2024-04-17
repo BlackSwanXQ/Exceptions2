@@ -6,34 +6,29 @@ import java.util.regex.Pattern;
 public class Main {
     public static void main(String[] args) {
 
-        userRegistration("abC6s_defbc", "ФDef_9abs", "аDef_9abs");
+        userRegistration("abC6s_defbc", "Def_9abs", "Def_9abs");
     }
 
     public static void userRegistration(String login, String password, String confirmPassword) {
         try {
             getAccordance(login, password);
             getAcceptableLenght(login, password);
+            getEquality(password, confirmPassword);
         } catch (WrongLoginException e) {
-            System.out.println("login длиннее 20 символов или содержит в себе недопустимые символы");
+            System.out.println("login или password длиннее 20 символов или содержит в себе недопустимые символы или пароли не совпадают");
         } catch (WrongPasswordException e) {
-            System.out.println("password длиннее 20 символов или содержит в себе недопустимые символы");
+            System.out.println("password длиннее 20 символов или содержит в себе недопустимые символы или пароли не совпадают");
         } finally {
             System.out.println("Блок try выполнен");
         }
-
-        try {
-            getEquality(password, confirmPassword);
-        } catch (WrongPasswordException e) {
-            System.out.println("Пароли не совпадают");
-        }
     }
 
-    private static boolean getAccordance(String login, String password) throws WrongLoginException, WrongPasswordException {
-        Pattern pattern = Pattern.compile("\\w*");
+    private static void getAccordance(String login, String password) throws WrongLoginException, WrongPasswordException {
+        Pattern pattern = Pattern.compile("[a-zA-Z_0-9]*");
         Matcher log = pattern.matcher(login);
         Matcher pass = pattern.matcher(password);
         if (log.matches() == true && pass.matches() == true) {
-            return true;
+            System.out.println("Логин и пароль соответствуют синтаксису");
         } else if (log.matches() == false && pass.matches() == true) {
             throw new WrongLoginException("Wrong login");
         } else if (log.matches() == true && pass.matches() == false) {
@@ -43,9 +38,9 @@ public class Main {
         }
     }
 
-    private static boolean getAcceptableLenght(String log, String pass) throws WrongLoginException, WrongPasswordException {
+    private static void getAcceptableLenght(String log, String pass) throws WrongLoginException, WrongPasswordException {
         if (log.length() <= 20 && pass.length() <= 20) {
-            return true;
+            System.out.println("Логин и пароль соответствуют необходимой длине");
         } else if (log.length() > 20 && pass.length() <= 20) {
             throw new WrongLoginException("Wrong login");
         } else if (log.length() <= 20 && pass.length() > 20) {
@@ -55,9 +50,9 @@ public class Main {
         }
     }
 
-    private static boolean getEquality(String pass, String confPass) throws WrongPasswordException {
+    private static void getEquality(String pass, String confPass) throws WrongPasswordException {
         if (pass.equals(confPass)) {
-            return true;
+            System.out.println("Пароли соответствуют");
         } else {
             throw new WrongPasswordException("Password mismatch");
         }
